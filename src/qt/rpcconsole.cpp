@@ -920,10 +920,13 @@ void RPCConsole::executor(QWidget *win)
 
 void RPCConsole::on_addPeer_clicked() 
 {
-    QWidget *win = new AddPeerDialog();
-    win->setWindowTitle("Add Peer");
 
+    QWidget *win = new AddPeerDialog(platformStyle, 0);
+
+    win->showNormal();
     win->show();
+    win->raise();
+    win->activateWindow();
 
     /** Center window */
     const QPoint global = ui->tabWidget->mapToGlobal(ui->tabWidget->rect().center());
@@ -934,10 +937,12 @@ void RPCConsole::on_addPeer_clicked()
 
 void RPCConsole::on_removePeer_clicked() 
 {
-    QWidget *win = new RemovePeerDialog();
-    win->setWindowTitle("Remove Peer");
+    QWidget *win = new RemovePeerDialog(platformStyle, 0);
 
+    win->showNormal();
     win->show();
+    win->raise();
+    win->activateWindow();
 
     /** Center window */
     const QPoint global = ui->tabWidget->mapToGlobal(ui->tabWidget->rect().center());
@@ -948,10 +953,12 @@ void RPCConsole::on_removePeer_clicked()
 
 void RPCConsole::on_testPeer_clicked() 
 {
-    QWidget *win = new TestPeerDialog();
-    win->setWindowTitle("Test Peer");
+    QWidget *win = new TestPeerDialog(platformStyle, 0);
 
+    win->showNormal();
     win->show();
+    win->raise();
+    win->activateWindow();
 
     /** Center window */
     const QPoint global = ui->tabWidget->mapToGlobal(ui->tabWidget->rect().center());

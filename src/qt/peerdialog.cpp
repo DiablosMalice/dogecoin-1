@@ -2,7 +2,6 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <algorithm>
 #if defined(HAVE_CONFIG_H)
 #include "config/bitcoin-config.h"
 #endif
@@ -12,8 +11,9 @@
 
 #include "peerdialog.h"
 
-#include "ui_helpmessagedialog.h"
-#include "ui_paperwalletdialog.h"
+#include "ui_addpeerdialog.h"
+#include "ui_removepeerdialog.h"
+#include "ui_testpeerdialog.h"
 
 #include "bitcoinunits.h"
 
@@ -50,7 +50,6 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QRegExp>
 #include <QTextCursor>
 #include <QTextTable>
 #include <QVBoxLayout>
@@ -60,11 +59,6 @@
 #include <QSignalMapper>
 #include <QThread>
 
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonValue>
-
 #ifdef USE_QRCODE
 #include <qrencode.h>
 #endif
@@ -73,52 +67,23 @@
 #include <QPainter>
 
 /** Add Peer Dialog */
-AddPeerDialog::AddPeerDialog(QWidget* parent, Qt::WindowFlags f) : QWidget(parent, f)
+AddPeerDialog::AddPeerDialog(const PlatformStyle *_platformStyle, QWidget *parent) : 
+    QWidget(parent),
+    ui(new Ui::AddPeerDialog)
 {
-    this->resize(466, 186);
-    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
-    verticalLayout->setObjectName(QString("verticalLayout"));
+    ui->setupUi(this);
 
-    QLabel* label = new QLabel(this);
-    label->setObjectName(QString("label"));
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_addPeer_clicked()));
+}
 
-    QFont font;
-    font.setPointSize(11);
-    font.setBold(true);
-    font.setWeight(75);
-    label->setFont(font);
-    label->setAlignment(Qt::AlignCenter);
-
-    verticalLayout->addWidget(label);
-
-    QLabel* label_2 = new QLabel(this);
-    label_2->setObjectName(QString("label_2"));
-    label_2->setAlignment(Qt::AlignCenter);
-
-    verticalLayout->addWidget(label_2);
-
-    lineEdit = new QLineEdit(this);
-    lineEdit->setObjectName(QString("lineEdit"));
-
-    verticalLayout->addWidget(lineEdit);
-
-    QPushButton* pushButton = new QPushButton(this);
-    pushButton->setObjectName(QString("pushButton"));
-
-    verticalLayout->addWidget(pushButton);
-
-    this->setWindowTitle("Add Peer");
-    label->setText("Enter the peer's address below.");
-    label_2->setText("Be careful! Do not blindly trust anyone that tells you to add their node.");
-    lineEdit->setPlaceholderText("Enter the peer's address and port if needed.");
-    pushButton->setText("Add!");
-
-    connect(pushButton, SIGNAL(clicked()), this, SLOT(on_addPeer_clicked()));
+AddPeerDialog::~AddPeerDialog()
+{
+    delete ui;
 }
 
 void AddPeerDialog::on_addPeer_clicked()
 {
-    QString peer = AddPeerDialog::lineEdit->text();
+    QString peer = ui->lineEdit->text();
     QString data = "";
 
     if(peer.isEmpty()) 
@@ -144,52 +109,23 @@ void AddPeerDialog::message(int category, const QString &message)
 }
 
 /** Remove Peer Dialog */
-RemovePeerDialog::RemovePeerDialog(QWidget* parent, Qt::WindowFlags f) : QWidget(parent, f)
+RemovePeerDialog::RemovePeerDialog(const PlatformStyle *_platformStyle, QWidget *parent) : 
+    QWidget(parent),
+    ui(new Ui::RemovePeerDialog)
 {
-    this->resize(466, 186);
-    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
-    verticalLayout->setObjectName(QString("verticalLayout"));
+    ui->setupUi(this);
 
-    QLabel* label = new QLabel(this);
-    label->setObjectName(QString("label"));
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_removePeer_clicked()));
+}
 
-    QFont font;
-    font.setPointSize(11);
-    font.setBold(true);
-    font.setWeight(75);
-    label->setFont(font);
-    label->setAlignment(Qt::AlignCenter);
-
-    verticalLayout->addWidget(label);
-
-    QLabel* label_2 = new QLabel(this);
-    label_2->setObjectName(QString("label_2"));
-    label_2->setAlignment(Qt::AlignCenter);
-
-    verticalLayout->addWidget(label_2);
-
-    lineEdit = new QLineEdit(this);
-    lineEdit->setObjectName(QString("lineEdit"));
-
-    verticalLayout->addWidget(lineEdit);
-
-    QPushButton* pushButton = new QPushButton(this);
-    pushButton->setObjectName(QString("pushButton"));
-
-    verticalLayout->addWidget(pushButton);
-
-    this->setWindowTitle("Remve Peer");
-    label->setText("Enter the peer's address below.");
-    label_2->setText("Be careful! Do not blindly trust anyone that tells you to add their node.");
-    lineEdit->setPlaceholderText("Enter the peer's address and port if needed.");
-    pushButton->setText("Remove!");
-
-    connect(pushButton, SIGNAL(clicked()), this, SLOT(on_removePeer_clicked()));
+RemovePeerDialog::~RemovePeerDialog()
+{
+    delete ui;
 }
 
 void RemovePeerDialog::on_removePeer_clicked()
 {
-    QString peer = RemovePeerDialog::lineEdit->text();
+    QString peer = ui->lineEdit->text();
     QString data = "";
 
     if(peer.isEmpty()) 
@@ -226,52 +162,23 @@ void RemovePeerDialog::message(int category, const QString &message)
 }
 
 /** Add Test Peer Dialog */
-TestPeerDialog::TestPeerDialog(QWidget* parent, Qt::WindowFlags f) : QWidget(parent, f)
+TestPeerDialog::TestPeerDialog(const PlatformStyle *_platformStyle, QWidget *parent) : 
+    QWidget(parent),
+    ui(new Ui::TestPeerDialog)
 {
-    this->resize(466, 186);
-    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
-    verticalLayout->setObjectName(QString("verticalLayout"));
+    ui->setupUi(this);
 
-    QLabel* label = new QLabel(this);
-    label->setObjectName(QString("label"));
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_testPeer_clicked()));
+}
 
-    QFont font;
-    font.setPointSize(11);
-    font.setBold(true);
-    font.setWeight(75);
-    label->setFont(font);
-    label->setAlignment(Qt::AlignCenter);
-
-    verticalLayout->addWidget(label);
-
-    QLabel* label_2 = new QLabel(this);
-    label_2->setObjectName(QString("label_2"));
-    label_2->setAlignment(Qt::AlignCenter);
-
-    verticalLayout->addWidget(label_2);
-
-    lineEdit = new QLineEdit(this);
-    lineEdit->setObjectName(QString("lineEdit"));
-
-    verticalLayout->addWidget(lineEdit);
-
-    QPushButton* pushButton = new QPushButton(this);
-    pushButton->setObjectName(QString("pushButton"));
-
-    verticalLayout->addWidget(pushButton);
-
-    this->setWindowTitle("Test Peer");
-    label->setText("Enter the peer's address below.");
-    label_2->setText("Be careful! Do not blindly trust anyone that tells you to add their node.");
-    lineEdit->setPlaceholderText("Enter the peer's address and port if needed.");
-    pushButton->setText("Test!");
-
-    connect(pushButton, SIGNAL(clicked()), this, SLOT(on_testPeer_clicked()));
+TestPeerDialog::~TestPeerDialog()
+{
+    delete ui;
 }
 
 void TestPeerDialog::on_testPeer_clicked()
 {
-    QString peer = TestPeerDialog::lineEdit->text();
+    QString peer = ui->lineEdit->text();
     QString data = "";
 
     if(peer.isEmpty()) 

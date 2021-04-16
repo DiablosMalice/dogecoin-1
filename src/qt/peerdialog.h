@@ -24,8 +24,10 @@ class AddPeerDialog : public QWidget
     Q_OBJECT
 
 public:
-    AddPeerDialog(QWidget *parent=0, Qt::WindowFlags f=0);
-    QLineEdit* lineEdit;
+    explicit AddPeerDialog(const PlatformStyle *platformStyle, QWidget *parent);
+    ~AddPeerDialog();
+private:
+    Ui::AddPeerDialog *ui;
 public Q_SLOTS:
     void message(int category, const QString &message);
 private Q_SLOTS:
@@ -42,8 +44,10 @@ class RemovePeerDialog : public QWidget
     Q_OBJECT
 
 public:
-    RemovePeerDialog(QWidget *parent=0, Qt::WindowFlags f=0);
-    QLineEdit* lineEdit;
+    explicit RemovePeerDialog(const PlatformStyle *platformStyle, QWidget *parent);
+    ~RemovePeerDialog();
+private:
+    Ui::RemovePeerDialog *ui;
 public Q_SLOTS:
     void message(int category, const QString &message);
 private Q_SLOTS:
@@ -60,8 +64,10 @@ class TestPeerDialog : public QWidget
     Q_OBJECT
 
 public:
-    TestPeerDialog(QWidget *parent=0, Qt::WindowFlags f=0);
-    QLineEdit* lineEdit;
+    explicit TestPeerDialog(const PlatformStyle *platformStyle, QWidget *parent);
+    ~TestPeerDialog();
+private:
+    Ui::TestPeerDialog *ui;
 public Q_SLOTS:
     void message(int category, const QString &message);
 private Q_SLOTS:
