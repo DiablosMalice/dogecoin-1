@@ -17,6 +17,7 @@
 class ClientModel;
 class PlatformStyle;
 class RPCTimerInterface;
+class RPCExecutor;
 
 namespace Ui {
     class RPCConsole;
@@ -67,6 +68,14 @@ private Q_SLOTS:
     void on_tabWidget_currentChanged(int index);
     /** open the debug.log from the current datadir */
     void on_openDebugLogfileButton_clicked();
+    /** open dialog to add new peer */
+    void on_addPeer_clicked();
+    /** open dialog to remove peer */
+    void on_removePeer_clicked();
+    /** open dialog to test peer */
+    void on_testPeer_clicked();
+    /** create executor for peer dialogs */
+    void executor(QWidget *win);
     /** change the time range of the network traffic graph */
     void on_sldGraphRange_valueChanged(int value);
     /** update traffic statistics */
@@ -155,6 +164,19 @@ private:
 
     /** Update UI with latest network info from model. */
     void updateNetworkState();
+};
+
+/* Object for executing console RPC commands in a separate thread.
+*/
+class RPCExecutor : public QObject
+{
+    Q_OBJECT
+
+public Q_SLOTS:
+    void request(const QString &command);
+
+Q_SIGNALS:
+    void reply(int category, const QString &command);
 };
 
 #endif // BITCOIN_QT_RPCCONSOLE_H
