@@ -8,7 +8,9 @@
 #include <QDialog>
 #include <QObject>
 #include <QWidget>
+#include <string>
 #include "guiutil.h"
+#include "rpcconsole.h"
 
 namespace Ui {
     class AddPeerDialog;
