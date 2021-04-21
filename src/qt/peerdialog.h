@@ -8,9 +8,7 @@
 #include <QDialog>
 #include <QObject>
 #include <QWidget>
-#include <QLineEdit>
 #include "guiutil.h"
-#include "walletmodel.h"
 
 namespace Ui {
     class AddPeerDialog;

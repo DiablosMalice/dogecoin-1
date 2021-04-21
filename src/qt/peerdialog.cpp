@@ -15,56 +15,18 @@
 #include "ui_removepeerdialog.h"
 #include "ui_testpeerdialog.h"
 
-#include "bitcoinunits.h"
-
-#ifdef ENABLE_WALLET
-#include "coincontroldialog.h"
-#include "sendcoinsdialog.h"
-#include "sendcoinsentry.h"
-#endif
-
-#include "bitcoingui.h"
-#include "clientmodel.h"
 #include "guiconstants.h"
 #include "guiutil.h"
-#include "intro.h"
-#include "optionsmodel.h"
 #include "rpcconsole.h"
-
-#include "clientversion.h"
-#include "init.h"
-#include "net.h"
-#include "util.h"
-#include "utilstrencodings.h"
-
-#include "chainparams.h"
-#include "netbase.h"
-#include "rpc/server.h"
-#include "rpc/client.h"
 
 #include <stdio.h>
 
-#include <QCloseEvent>
-#include <QFont>
-#include <QInputDialog>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QTextCursor>
-#include <QTextTable>
-#include <QVBoxLayout>
-#include <QObject>
-#include <QWidget>
 #include <QMessageBox>
-#include <QSignalMapper>
 #include <QThread>
 
 #ifdef USE_QRCODE
 #include <qrencode.h>
 #endif
-
-#include "walletmodel.h"
-#include <QPainter>
 
 /** Add Peer Dialog */
 AddPeerDialog::AddPeerDialog(const PlatformStyle *_platformStyle, QWidget *parent) : 
