@@ -905,17 +905,17 @@ void RPCConsole::executor(QWidget *win)
 {
     /** RPC threading */
     RPCExecutor *executor = new RPCExecutor();
-    executor->moveToThread(&thread);
+    executor->moveToThread(&peerThread);
 
     connect(executor, SIGNAL(reply(int,QString)), win, SLOT(message(int,QString)));
     connect(win, SIGNAL(cmdRequest(QString)), executor, SLOT(request(QString)));
 
     // - quit the Qt event loop in the execution thread
-    connect(win, SIGNAL(stopExecutor()), &thread, SLOT(quit()));
+    connect(win, SIGNAL(stopExecutor()), &peerThread, SLOT(quit()));
     // - queue executor for deletion (in execution thread)
-    connect(&thread, SIGNAL(finished()), executor, SLOT(deleteLater()), Qt::DirectConnection);
+    connect(&peerThread, SIGNAL(finished()), executor, SLOT(deleteLater()), Qt::DirectConnection);
 
-    thread.start();
+    peerThread.start();
 }
 
 void RPCConsole::on_addPeer_clicked() 

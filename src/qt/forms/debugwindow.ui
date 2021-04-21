@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>740</width>
-    <height>430</height>
+    <height>562</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab_info">
       <attribute name="title">
@@ -877,7 +877,7 @@
             <cursorShape>IBeamCursor</cursorShape>
            </property>
            <property name="text">
-            <string>Current peers</string>
+            <string>Connected peers</string>
            </property>
           </widget>
          </item>
@@ -917,7 +917,7 @@
            </item>
            <item>
             <widget class="QPushButton" name="peerRemove">
-            <property name="cursor">
+             <property name="cursor">
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="text">
@@ -927,11 +927,11 @@
            </item>
            <item>
             <widget class="QPushButton" name="peerTest">
-            <property name="cursor">
+             <property name="cursor">
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="text">
-              <string>Test Peer</string>
+              <string>Test peer</string>
              </property>
             </widget>
            </item>

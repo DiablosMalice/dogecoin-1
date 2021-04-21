@@ -99,7 +99,7 @@ void AddPeerDialog::on_addPeer_clicked()
 
 void AddPeerDialog::message(int category, const QString &message)
 {
-    int result = QMessageBox::critical(this, "RPC Handler", message, QMessageBox::Ok, QMessageBox::Ok);
+    int result = QMessageBox::information(this, "RPC Handler", message, QMessageBox::Ok, QMessageBox::Ok);
 
     if(result == QMessageBox::Ok)
     {
@@ -141,18 +141,8 @@ void RemovePeerDialog::on_removePeer_clicked()
 }
 
 void RemovePeerDialog::message(int category, const QString &message)
-{
-    //** Todo, get all peers and parse via JSON */
-    // QJsonDocument doc(QJsonDocument::fromJson(message.toUtf8()));
-    // QJsonObject json = doc.object();
-
-    // for (const QString& key : json.keys())
-    // {
-    //     QJsonValue value = json.value(key);
-    //     QMessageBox::critical(this, "RPC Json Loop", value.toString(), QMessageBox::Ok, QMessageBox::Ok);
-    // }
-    
-    int result = QMessageBox::critical(this, "RPC Handler", message, QMessageBox::Ok, QMessageBox::Ok);
+{    
+    int result = QMessageBox::information(this, "RPC Handler", message, QMessageBox::Ok, QMessageBox::Ok);
 
     if(result == QMessageBox::Ok)
     {
@@ -194,7 +184,7 @@ void TestPeerDialog::on_testPeer_clicked()
 
 void TestPeerDialog::message(int category, const QString &message)
 {
-    int result = QMessageBox::critical(this, "RPC Handler", message, QMessageBox::Ok, QMessageBox::Ok);
+    int result = QMessageBox::information(this, "RPC Handler", message, QMessageBox::Ok, QMessageBox::Ok);
 
     if(result == QMessageBox::Ok)
     {
