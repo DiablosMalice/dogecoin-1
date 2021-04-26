@@ -36,7 +36,7 @@ private Q_SLOTS:
     void resetDialogValues();
 
     /* import a private key */
-    void importKey();
+    bool importKey();
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H

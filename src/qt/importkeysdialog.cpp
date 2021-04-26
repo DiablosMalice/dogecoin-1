@@ -53,7 +53,7 @@ void ImportKeysDialog::on_resetButton_clicked()
     resetDialogValues();
 }
 
-boolean ImportKeysDialog::importKey()
+bool ImportKeysDialog::importKey()
 {
     const QString privateKey      = ui->privateKey->text();
     const QString privateKeyLabel = ui->privateKeyLabel->text();
