@@ -42,7 +42,7 @@
          <item>
           <widget class="QLineEdit" name="privateKey">
            <property name="toolTip">
-            <string>Private Key to import into your wallet</string>
+            <string>Private key to import into your wallet</string>
            </property>
           </widget>
          </item>

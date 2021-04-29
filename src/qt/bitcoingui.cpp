@@ -394,7 +394,7 @@ void BitcoinGUI::createActions()
     openAction->setStatusTip(tr("Open a dogecoin: URI or payment request"));
 
     importPrivateKeyAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Import Private Key..."), this);
-    importPrivateKeyAction->setStatusTip(tr("Import a dogecoin private key"));
+    importPrivateKeyAction->setStatusTip(tr("Import a Dogecoin private key"));
 
     showHelpMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/info"), tr("&Command-line options"), this);
     showHelpMessageAction->setMenuRole(QAction::NoRole);
