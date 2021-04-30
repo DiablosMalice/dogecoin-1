@@ -10,7 +10,8 @@
 #include <QWidget>
 #include <string>
 #include "guiutil.h"
-#include "rpcconsole.h"
+
+class PeerTools;
 
 namespace Ui {
     class AddPeerDialog;
@@ -18,24 +19,27 @@ namespace Ui {
     class TestPeerDialog;
 }
 
+/** Class to manage peers */
+class PeerTools : public QObject
+{
+    Q_OBJECT
+
+public:
+    static QString ManagePeer(QString type, QString peer);
+};
+
 /** "Add peer" dialog box */
 class AddPeerDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit AddPeerDialog(const PlatformStyle *platformStyle, QWidget *parent);
+    explicit AddPeerDialog(QWidget *parent);
     ~AddPeerDialog();
 private:
     Ui::AddPeerDialog *ui;
-public Q_SLOTS:
-    void message(int category, const QString &message);
 private Q_SLOTS:
     void on_addPeer_clicked();
-Q_SIGNALS:
-    // For RPC command executor
-    void stopExecutor();
-    void cmdRequest(const QString &command);
 };
 
 /** "Remove peer" dialog box */
@@ -44,18 +48,12 @@ class RemovePeerDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit RemovePeerDialog(const PlatformStyle *platformStyle, QWidget *parent);
+    explicit RemovePeerDialog(QWidget *parent);
     ~RemovePeerDialog();
 private:
     Ui::RemovePeerDialog *ui;
-public Q_SLOTS:
-    void message(int category, const QString &message);
 private Q_SLOTS:
     void on_removePeer_clicked();
-Q_SIGNALS:
-    // For RPC command executor
-    void stopExecutor();
-    void cmdRequest(const QString &command);
 };
 
 /** "Test peer" dialog box */
@@ -64,18 +62,12 @@ class TestPeerDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit TestPeerDialog(const PlatformStyle *platformStyle, QWidget *parent);
+    explicit TestPeerDialog(QWidget *parent);
     ~TestPeerDialog();
 private:
     Ui::TestPeerDialog *ui;
-public Q_SLOTS:
-    void message(int category, const QString &message);
 private Q_SLOTS:
     void on_testPeer_clicked();
-Q_SIGNALS:
-    // For RPC command executor
-    void stopExecutor();
-    void cmdRequest(const QString &command);
 };
 
 #endif

@@ -931,7 +931,7 @@
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="text">
-              <string>Test peer</string>
+              <string>One try peer</string>
              </property>
             </widget>
            </item>

@@ -82,6 +82,19 @@ const QStringList historyFilter = QStringList()
 
 }
 
+/* Object for executing console RPC commands in a separate thread.
+*/
+class RPCExecutor : public QObject
+{
+    Q_OBJECT
+
+public Q_SLOTS:
+    void request(const QString &command);
+
+Q_SIGNALS:
+    void reply(int category, const QString &command);
+};
+
 /** Class for handling RPC timers
  * (used for e.g. re-locking the wallet after a timeout)
  */
@@ -901,27 +914,10 @@ void RPCConsole::on_openDebugLogfileButton_clicked()
     GUIUtil::openDebugLogfile();
 }
 
-void RPCConsole::executor(QWidget *win)
-{
-    /** RPC threading */
-    RPCExecutor *executor = new RPCExecutor();
-    executor->moveToThread(&peerThread);
-
-    connect(executor, SIGNAL(reply(int,QString)), win, SLOT(message(int,QString)));
-    connect(win, SIGNAL(cmdRequest(QString)), executor, SLOT(request(QString)));
-
-    // - quit the Qt event loop in the execution thread
-    connect(win, SIGNAL(stopExecutor()), &peerThread, SLOT(quit()));
-    // - queue executor for deletion (in execution thread)
-    connect(&peerThread, SIGNAL(finished()), executor, SLOT(deleteLater()), Qt::DirectConnection);
-
-    peerThread.start();
-}
-
 void RPCConsole::on_addPeer_clicked() 
 {
 
-    QWidget *win = new AddPeerDialog(platformStyle, 0);
+    QWidget *win = new AddPeerDialog(0);
 
     win->showNormal();
     win->show();
@@ -931,13 +927,11 @@ void RPCConsole::on_addPeer_clicked()
     /** Center window */
     const QPoint global = ui->tabWidget->mapToGlobal(ui->tabWidget->rect().center());
     win->move(global.x() - win->width() / 2, global.y() - win->height() / 2);
-
-    executor(win);
 }
 
 void RPCConsole::on_removePeer_clicked() 
 {
-    QWidget *win = new RemovePeerDialog(platformStyle, 0);
+    QWidget *win = new RemovePeerDialog(0);
 
     win->showNormal();
     win->show();
@@ -947,13 +941,11 @@ void RPCConsole::on_removePeer_clicked()
     /** Center window */
     const QPoint global = ui->tabWidget->mapToGlobal(ui->tabWidget->rect().center());
     win->move(global.x() - win->width() / 2, global.y() - win->height() / 2);
-
-    executor(win);
 }
 
 void RPCConsole::on_testPeer_clicked() 
 {
-    QWidget *win = new TestPeerDialog(platformStyle, 0);
+    QWidget *win = new TestPeerDialog(0);
 
     win->showNormal();
     win->show();
@@ -963,8 +955,6 @@ void RPCConsole::on_testPeer_clicked()
     /** Center window */
     const QPoint global = ui->tabWidget->mapToGlobal(ui->tabWidget->rect().center());
     win->move(global.x() - win->width() / 2, global.y() - win->height() / 2);
-
-    executor(win);
 }
 
 void RPCConsole::scrollToEnd()
