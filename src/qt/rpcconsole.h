@@ -74,8 +74,6 @@ private Q_SLOTS:
     void on_removePeer_clicked();
     /** open dialog to test peer */
     void on_testPeer_clicked();
-    /** create executor for peer dialogs */
-    void executor(QWidget *win);
     /** change the time range of the network traffic graph */
     void on_sldGraphRange_valueChanged(int value);
     /** update traffic statistics */
@@ -165,19 +163,6 @@ private:
 
     /** Update UI with latest network info from model. */
     void updateNetworkState();
-};
-
-/* Object for executing console RPC commands in a separate thread.
-*/
-class RPCExecutor : public QObject
-{
-    Q_OBJECT
-
-public Q_SLOTS:
-    void request(const QString &command);
-
-Q_SIGNALS:
-    void reply(int category, const QString &command);
 };
 
 #endif // BITCOIN_QT_RPCCONSOLE_H
