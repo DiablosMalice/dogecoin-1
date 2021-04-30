@@ -159,7 +159,6 @@ private:
     int consoleFontSize;
     QCompleter *autoCompleter;
     QThread thread;
-    QThread peerThread;
 
     /** Update UI with latest network info from model. */
     void updateNetworkState();
