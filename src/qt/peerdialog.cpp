@@ -27,7 +27,6 @@
 #include <stdio.h>
 
 #include <QMessageBox>
-#include <QThread>
 
 /** Function to manage peers */
 QString PeerTools::ManagePeer(QString type, QString peer)
@@ -58,13 +57,14 @@ QString PeerTools::ManagePeer(QString type, QString peer)
     return "Executed command.";
 }
 
-
 /** Add Peer Dialog */
 AddPeerDialog::AddPeerDialog(QWidget *parent) : 
     QWidget(parent),
     ui(new Ui::AddPeerDialog)
 {
     ui->setupUi(this);
+
+    ui->peerPort->setValidator( new QIntValidator(1, 65535, this) );
 
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_addPeer_clicked()));
 }
@@ -76,16 +76,23 @@ AddPeerDialog::~AddPeerDialog()
 
 void AddPeerDialog::on_addPeer_clicked()
 {
-    QString peer = ui->lineEdit->text();
+    QString address = ui->peerAddress->text();
+    QString port = ui->peerPort->text();
     QString data = "";
 
-    if(peer.isEmpty()) 
+    if(address.isEmpty()) 
     {
          QMessageBox::critical(this, "Add Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
          return;
     }
 
-    data = peer.contains(":") ? peer : peer + ":" + "22556";
+    if(port.isEmpty()) 
+    {
+         QMessageBox::critical(this, "Add Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
+         return;
+    }
+
+    data = address + ":" + port;
 
     if(QMessageBox::Ok == QMessageBox::information(this, "Add Peer", PeerTools::ManagePeer("add", data), QMessageBox::Ok, QMessageBox::Ok))
         this->close();
@@ -98,6 +105,8 @@ RemovePeerDialog::RemovePeerDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->peerPort->setValidator( new QIntValidator(1, 65535, this) );
+    
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_removePeer_clicked()));
 }
 
@@ -108,16 +117,23 @@ RemovePeerDialog::~RemovePeerDialog()
 
 void RemovePeerDialog::on_removePeer_clicked()
 {
-    QString peer = ui->lineEdit->text();
+    QString address = ui->peerAddress->text();
+    QString port = ui->peerPort->text();
     QString data = "";
 
-    if(peer.isEmpty()) 
+    if(address.isEmpty()) 
     {
          QMessageBox::critical(this, "Remove Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
          return;
     }
 
-    data = peer.contains(":") ? peer : peer + ":" + "22556";
+    if(port.isEmpty()) 
+    {
+         QMessageBox::critical(this, "Remove Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
+         return;
+    }
+
+    data = address + ":" + port;
 
     if(QMessageBox::Ok == QMessageBox::information(this, "Remove Peer", PeerTools::ManagePeer("remove", data), QMessageBox::Ok, QMessageBox::Ok))
         this->close();
@@ -130,6 +146,8 @@ TestPeerDialog::TestPeerDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->peerPort->setValidator( new QIntValidator(1, 65535, this) );
+
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_testPeer_clicked()));
 }
 
@@ -140,16 +158,23 @@ TestPeerDialog::~TestPeerDialog()
 
 void TestPeerDialog::on_testPeer_clicked()
 {
-    QString peer = ui->lineEdit->text();
+    QString address = ui->peerAddress->text();
+    QString port = ui->peerPort->text();
     QString data = "";
 
-    if(peer.isEmpty()) 
+    if(address.isEmpty()) 
     {
-         QMessageBox::critical(this, "Try Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
+         QMessageBox::critical(this, "Test Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
          return;
     }
 
-    data = peer.contains(":") ? peer : peer + ":" + "22556";
+    if(port.isEmpty()) 
+    {
+         QMessageBox::critical(this, "Test Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
+         return;
+    }
+
+    data = address + ":" + port;
 
     if(QMessageBox::Ok == QMessageBox::information(this, "Try Peer", PeerTools::ManagePeer("onetry", data), QMessageBox::Ok, QMessageBox::Ok))
         this->close();

@@ -5,7 +5,6 @@
 #ifndef BITCOIN_QT_PEERDIALOG_H
 #define BITCOIN_QT_PEERDIALOG_H
 
-#include <QDialog>
 #include <QObject>
 #include <QWidget>
 #include <string>
