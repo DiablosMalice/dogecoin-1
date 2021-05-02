@@ -18,6 +18,7 @@
 #include "net_processing.h"
 #include "netbase.h"
 #include "protocol.h"
+#include "chainparams.h"
 #include "util.h"
 
 #include <stdio.h>
@@ -62,7 +63,20 @@ bool PeerTools::CheckIPAddress(QString ip)
 
     if (QAbstractSocket::IPv4Protocol == address.protocol())
     {
-        return true;
+        /** A regular expression to validate IPs */
+        QRegExp exp("([0-9]{1,3}[.]){3}[0-9]{1,3}");
+
+        QRegExpValidator validator(exp);
+        
+        int index = 0;
+        if (validator.validate(ip, index) == QValidator::Acceptable)
+        { 
+            return true;
+
+        } else 
+        {
+            return false;
+        }
     }
     else if (QAbstractSocket::IPv6Protocol == address.protocol())
     {
