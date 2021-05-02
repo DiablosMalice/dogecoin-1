@@ -53,7 +53,7 @@ QString PeerTools::ManagePeer(QString type, QString peer)
             return "Error: Node has not been added.";
     }
 
-    return "Executed command.";
+    return "Returned OK.";
 }
 
 /** Check if IP is vaild */
