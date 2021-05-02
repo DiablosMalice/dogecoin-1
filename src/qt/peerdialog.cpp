@@ -19,14 +19,13 @@
 #include "net_processing.h"
 #include "netbase.h"
 #include "protocol.h"
-#include "ui_interface.h"
 #include "util.h"
-#include "guiconstants.h"
-#include "guiutil.h"
 
 #include <stdio.h>
 
 #include <QMessageBox>
+#include <QHostAddress>
+#include <QAbstractSocket>
 
 /** Function to manage peers */
 QString PeerTools::ManagePeer(QString type, QString peer)
@@ -57,6 +56,25 @@ QString PeerTools::ManagePeer(QString type, QString peer)
     return "Executed command.";
 }
 
+/** Check if IP is vaild */
+bool PeerTools::CheckIPAddress(QString ip)
+{
+    QHostAddress address(ip);
+
+    if (QAbstractSocket::IPv4Protocol == address.protocol())
+    {
+        return true;
+    }
+    else if (QAbstractSocket::IPv6Protocol == address.protocol())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 /** Add Peer Dialog */
 AddPeerDialog::AddPeerDialog(QWidget *parent) : 
     QWidget(parent),
@@ -82,14 +100,20 @@ void AddPeerDialog::on_addPeer_clicked()
 
     if(address.isEmpty()) 
     {
-         QMessageBox::critical(this, "Add Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
-         return;
+        QMessageBox::critical(this, "Add Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
+        return;
     }
 
     if(port.isEmpty()) 
     {
-         QMessageBox::critical(this, "Add Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
-         return;
+        QMessageBox::critical(this, "Add Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
+        return;
+    }
+
+    if(!PeerTools::CheckIPAddress(address))
+    {
+        QMessageBox::critical(this, "Add Peer", "Please enter a vaild IP address.", QMessageBox::Ok, QMessageBox::Ok);
+        return;
     }
 
     data = address + ":" + port;
@@ -123,14 +147,20 @@ void RemovePeerDialog::on_removePeer_clicked()
 
     if(address.isEmpty()) 
     {
-         QMessageBox::critical(this, "Remove Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
-         return;
+        QMessageBox::critical(this, "Remove Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
+        return;
     }
 
     if(port.isEmpty()) 
     {
-         QMessageBox::critical(this, "Remove Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
-         return;
+        QMessageBox::critical(this, "Remove Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
+        return;
+    }
+
+    if(!PeerTools::CheckIPAddress(address))
+    {
+        QMessageBox::critical(this, "Remove Peer", "Please enter a vaild IP address.", QMessageBox::Ok, QMessageBox::Ok);
+        return;
     }
 
     data = address + ":" + port;
@@ -164,14 +194,20 @@ void TestPeerDialog::on_testPeer_clicked()
 
     if(address.isEmpty()) 
     {
-         QMessageBox::critical(this, "Test Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
-         return;
+        QMessageBox::critical(this, "Test Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
+        return;
     }
 
     if(port.isEmpty()) 
     {
-         QMessageBox::critical(this, "Test Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
-         return;
+        QMessageBox::critical(this, "Test Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
+        return;
+    }
+
+    if(!PeerTools::CheckIPAddress(address))
+    {
+        QMessageBox::critical(this, "Test Peer", "Please enter a vaild IP address.", QMessageBox::Ok, QMessageBox::Ok);
+        return;
     }
 
     data = address + ":" + port;

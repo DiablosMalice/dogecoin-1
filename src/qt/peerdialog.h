@@ -25,6 +25,7 @@ class PeerTools : public QObject
 
 public:
     static QString ManagePeer(QString type, QString peer);
+    static bool CheckIPAddress(QString ip); 
 };
 
 /** "Add peer" dialog box */
