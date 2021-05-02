@@ -50,7 +50,17 @@ QString PeerTools::ManagePeer(QString type, QString peer)
     else if(type == "remove")
     {
         if(!g_connman->RemoveAddedNode(peerAddress))
-            return "Error: Node has not been added.";
+        {
+            if(!g_connman->DisconnectNode(peerAddress))
+                return "Node not found in connected nodes";
+
+            return "Disconnected the node: " + peer;
+        }
+        else
+        {
+            if(!g_connman->DisconnectNode(peerAddress))
+                return "Node not found in connected nodes";
+        }
     }
 
     return "Returned OK.";
