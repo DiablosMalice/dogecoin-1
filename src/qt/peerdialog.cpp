@@ -122,53 +122,6 @@ void AddPeerDialog::on_addPeer_clicked()
         this->close();
 }
 
-/** Remove Peer Dialog */
-RemovePeerDialog::RemovePeerDialog(QWidget *parent) : 
-    QWidget(parent),
-    ui(new Ui::RemovePeerDialog)
-{
-    ui->setupUi(this);
-
-    ui->peerPort->setValidator( new QIntValidator(1, 65535, this) );
-    
-    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_removePeer_clicked()));
-}
-
-RemovePeerDialog::~RemovePeerDialog()
-{
-    delete ui;
-}
-
-void RemovePeerDialog::on_removePeer_clicked()
-{
-    QString address = ui->peerAddress->text();
-    QString port = ui->peerPort->text();
-    QString data = "";
-
-    if(address.isEmpty()) 
-    {
-        QMessageBox::critical(this, "Remove Peer", "Please enter an address.", QMessageBox::Ok, QMessageBox::Ok);
-        return;
-    }
-
-    if(port.isEmpty()) 
-    {
-        QMessageBox::critical(this, "Remove Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
-        return;
-    }
-
-    if(!PeerTools::CheckIPAddress(address))
-    {
-        QMessageBox::critical(this, "Remove Peer", "Please enter a vaild IP address.", QMessageBox::Ok, QMessageBox::Ok);
-        return;
-    }
-
-    data = address + ":" + port;
-
-    if(QMessageBox::Ok == QMessageBox::information(this, "Remove Peer", PeerTools::ManagePeer("remove", data), QMessageBox::Ok, QMessageBox::Ok))
-        this->close();
-}
-
 /** Add Test Peer Dialog */
 TestPeerDialog::TestPeerDialog(QWidget *parent) : 
     QWidget(parent),

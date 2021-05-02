@@ -110,7 +110,6 @@ QT_FORMS_UI = \
   qt/forms/receiverequestdialog.ui \
   qt/forms/debugwindow.ui \
   qt/forms/addpeerdialog.ui \
-  qt/forms/removepeerdialog.ui \
   qt/forms/testpeerdialog.ui \
   qt/forms/sendcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \

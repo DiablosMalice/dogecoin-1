@@ -42,20 +42,6 @@ private Q_SLOTS:
     void on_addPeer_clicked();
 };
 
-/** "Remove peer" dialog box */
-class RemovePeerDialog : public QWidget
-{
-    Q_OBJECT
-
-public:
-    explicit RemovePeerDialog(QWidget *parent);
-    ~RemovePeerDialog();
-private:
-    Ui::RemovePeerDialog *ui;
-private Q_SLOTS:
-    void on_removePeer_clicked();
-};
-
 /** "Test peer" dialog box */
 class TestPeerDialog : public QWidget
 {

@@ -930,17 +930,19 @@ void RPCConsole::on_addPeer_clicked()
 }
 
 void RPCConsole::on_removePeer_clicked() 
-{
-    QWidget *win = new RemovePeerDialog(0);
+{    
+    QList<QModelIndex> ips = GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::Address);
 
-    win->showNormal();
-    win->show();
-    win->raise();
-    win->activateWindow();
+    if(ips.size() != 0)
+    {
+        QString address = ips[0].data().toString();
 
-    /** Center window */
-    const QPoint global = ui->tabWidget->mapToGlobal(ui->tabWidget->rect().center());
-    win->move(global.x() - win->width() / 2, global.y() - win->height() / 2);
+        if(QMessageBox::Yes == QMessageBox::question(this, "Remove Peer", "Are you sure you want to remove the peer: " + address + "?", QMessageBox::Yes | QMessageBox::No))
+            QMessageBox::information(this, "Remove Peer", PeerTools::ManagePeer("remove", address), QMessageBox::Ok, QMessageBox::Ok);
+    } else 
+    {
+        QMessageBox::information(this, "Remove Peer", "No peer was selected.", QMessageBox::Ok, QMessageBox::Ok);
+    }
 }
 
 void RPCConsole::on_testPeer_clicked() 
