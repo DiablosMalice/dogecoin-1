@@ -98,6 +98,20 @@ bool PeerTools::CheckIPAddress(QString ip)
     }
 }
 
+/** Get port based on current chain */
+QString PeerTools::GetPort()
+{
+    QString chain = QString::fromStdString(Params().NetworkIDString());
+
+    if (chain == "main") {
+        return "22556";
+    } else if (chain == "test") {
+        return "44556";
+    } else if (chain == "regtest") {
+       return "18332";
+    }
+}
+
 /** Add Peer Dialog */
 AddPeerDialog::AddPeerDialog(QWidget *parent) : 
     QWidget(parent),
@@ -129,8 +143,8 @@ void AddPeerDialog::on_addPeer_clicked()
 
     if(port.isEmpty()) 
     {
-        QMessageBox::critical(this, "Add Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
-        return;
+        port = PeerTools::GetPort();
+        ui->peerAddress->setText(port);
     }
 
     if(!PeerTools::CheckIPAddress(address))
@@ -176,8 +190,8 @@ void TestPeerDialog::on_testPeer_clicked()
 
     if(port.isEmpty()) 
     {
-        QMessageBox::critical(this, "Test Peer", "Please enter a port. The default port is 22556 or 44556 for the testnet.", QMessageBox::Ok, QMessageBox::Ok);
-        return;
+        port = PeerTools::GetPort();
+        ui->peerAddress->setText(port);
     }
 
     if(!PeerTools::CheckIPAddress(address))
