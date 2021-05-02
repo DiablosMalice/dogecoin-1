@@ -12,7 +12,6 @@
 #include "peerdialog.h"
 
 #include "ui_addpeerdialog.h"
-#include "ui_removepeerdialog.h"
 #include "ui_testpeerdialog.h"
 
 #include "net.h"
