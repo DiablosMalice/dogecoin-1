@@ -144,7 +144,7 @@ void AddPeerDialog::on_addPeer_clicked()
     if(port.isEmpty()) 
     {
         port = PeerTools::GetPort();
-        ui->peerAddress->setText(port);
+        ui->peerPort->setText(port);
     }
 
     if(!PeerTools::CheckIPAddress(address))
@@ -191,7 +191,7 @@ void TestPeerDialog::on_testPeer_clicked()
     if(port.isEmpty()) 
     {
         port = PeerTools::GetPort();
-        ui->peerAddress->setText(port);
+        ui->peerPort->setText(port);
     }
 
     if(!PeerTools::CheckIPAddress(address))
