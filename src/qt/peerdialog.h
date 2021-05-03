@@ -25,7 +25,9 @@ class PeerTools : public QObject
 
 public:
     static QString ManagePeer(QString type, QString peer);
-    static bool CheckIPAddress(QString ip); 
+    static bool CheckPeerAddress(QString address); 
+    static bool CheckIPAddress(QString ip);
+    static bool CheckDNS(QString dns);
     static QString GetPort();
 };
 

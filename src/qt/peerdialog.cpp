@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include "guiutil.h"
 #if defined(HAVE_CONFIG_H)
 #include "config/bitcoin-config.h"
 #endif
@@ -26,6 +27,7 @@
 #include <QMessageBox>
 #include <QHostAddress>
 #include <QAbstractSocket>
+#include <QUrl>
 
 /** Function to manage peers */
 QString PeerTools::ManagePeer(QString type, QString peer)
@@ -66,6 +68,31 @@ QString PeerTools::ManagePeer(QString type, QString peer)
     return "Returned OK.";
 }
 
+/** Check if Peer is vaild */
+bool PeerTools::CheckPeerAddress(QString address)
+{
+    if(PeerTools::CheckIPAddress(address))
+        return true;
+    else if(PeerTools::CheckDNS(address))
+        return true;
+    else
+        return false;
+}
+
+/** Check if DNS domain is vaild */
+bool PeerTools::CheckDNS(QString dns)
+{
+    QRegExp exp("^[a-z0-9]*[.][a-z]{2,5}$");
+
+    QRegExpValidator validator(exp);
+        
+    int index = 0;
+    if (validator.validate(dns, index) == QValidator::Acceptable)
+        return true;
+    else
+        return false;
+}
+
 /** Check if IP is vaild */
 bool PeerTools::CheckIPAddress(QString ip)
 {
@@ -80,13 +107,9 @@ bool PeerTools::CheckIPAddress(QString ip)
         
         int index = 0;
         if (validator.validate(ip, index) == QValidator::Acceptable)
-        { 
             return true;
-
-        } else 
-        {
+        else
             return false;
-        }
     }
     else if (QAbstractSocket::IPv6Protocol == address.protocol())
     {
@@ -109,6 +132,9 @@ QString PeerTools::GetPort()
         return "44556";
     } else if (chain == "regtest") {
        return "18332";
+    } else {
+        /** Chain type is unknown so return main chain port */
+        return "22556";
     }
 }
 
@@ -147,9 +173,9 @@ void AddPeerDialog::on_addPeer_clicked()
         ui->peerPort->setText(port);
     }
 
-    if(!PeerTools::CheckIPAddress(address))
+    if(!PeerTools::CheckPeerAddress(address))
     {
-        QMessageBox::critical(this, "Add Peer", "Please enter a vaild IP address.", QMessageBox::Ok, QMessageBox::Ok);
+        QMessageBox::critical(this, "Add Peer", "Please enter a vaild peer address.", QMessageBox::Ok, QMessageBox::Ok);
         return;
     }
 
@@ -194,9 +220,9 @@ void TestPeerDialog::on_testPeer_clicked()
         ui->peerPort->setText(port);
     }
 
-    if(!PeerTools::CheckIPAddress(address))
+    if(!PeerTools::CheckPeerAddress(address))
     {
-        QMessageBox::critical(this, "Test Peer", "Please enter a vaild IP address.", QMessageBox::Ok, QMessageBox::Ok);
+        QMessageBox::critical(this, "Test Peer", "Please enter a vaild peer address.", QMessageBox::Ok, QMessageBox::Ok);
         return;
     }
 
