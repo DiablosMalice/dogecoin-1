@@ -1,6 +1,6 @@
 dist: trusty
 os: linux
-language: minimal
+language: generic
 cache:
   directories:
   - depends/built

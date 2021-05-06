@@ -97,7 +97,7 @@ UniValue getnetworkhashps(const JSONRPCRequest& request)
     return GetNetworkHashPS(request.params.size() > 0 ? request.params[0].get_int() : 120, request.params.size() > 1 ? request.params[1].get_int() : -1);
 }
 
-UniValue generateBlocks(boost::shared_ptr<CReserveScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript, int nMineAuxPow)
+UniValue generateBlocks(boost::shared_ptr<CReserveScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)
 {
     // Dogecoin: Never mine witness tx
     const bool fMineWitnessTx = false;
@@ -124,40 +124,22 @@ UniValue generateBlocks(boost::shared_ptr<CReserveScript> coinbaseScript, int nG
             LOCK(cs_main);
             IncrementExtraNonce(pblock, chainActive.Tip(), nExtraNonce);
         }
-        if (!nMineAuxPow) {
-            while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && !CheckProofOfWork(pblock->GetPoWHash(), pblock->nBits, Params().GetConsensus(nHeight))) {
-                ++pblock->nNonce;
-                --nMaxTries;
-            }
-        } else {
-            CAuxPow::initAuxPow(*pblock);
-            CPureBlockHeader& miningHeader = pblock->auxpow->parentBlock;
-            while (nMaxTries > 0 && miningHeader.nNonce < nInnerLoopCount && !CheckProofOfWork(miningHeader.GetHash(), pblock->nBits, Params().GetConsensus(nHeight))) {
-                ++miningHeader.nNonce;
-                --nMaxTries;
-            }
+        // Dogecoin: Don't mine Aux blocks in regtest
+        //CAuxPow::initAuxPow(*pblock);
+        //CPureBlockHeader& miningHeader = pblock->auxpow->parentBlock;
+        while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && !CheckProofOfWork(pblock->GetPoWHash(), pblock->nBits, Params().GetConsensus(nHeight))) {
+            ++pblock->nNonce;
+            --nMaxTries;
         }
         if (nMaxTries == 0) {
             break;
         }
-        if (!nMineAuxPow) {
-            if (pblock->nNonce == nInnerLoopCount) {
-                continue;
-            }
-        } else {
-            CPureBlockHeader& miningHeader = pblock->auxpow->parentBlock;
-            if (miningHeader.nNonce == nInnerLoopCount) {
-                continue;
-            }
+        if (pblock->nNonce == nInnerLoopCount) {
+            continue;
         }
         std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
         if (!ProcessNewBlock(Params(), shared_pblock, true, NULL))
-            if (nMineAuxPow) {
-                continue;
-            }
-            else { 
-                throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, block not accepted"); 
-            }
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, block not accepted");
         ++nHeight;
         blockHashes.push_back(pblock->GetHash().GetHex());
 
@@ -172,14 +154,13 @@ UniValue generateBlocks(boost::shared_ptr<CReserveScript> coinbaseScript, int nG
 
 UniValue generate(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw runtime_error(
-            "generate nblocks ( maxtries auxpow )\n"
+            "generate nblocks ( maxtries )\n"
             "\nMine up to nblocks blocks immediately (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
             "2. maxtries     (numeric, optional) How many iterations to try (default = 1000000).\n"
-            "3. auxpow       (numeric, optional) If the block should include the auxpow header (default = 0).\n"
             "\nResult:\n"
             "[ blockhashes ]     (array) hashes of blocks generated\n"
             "\nExamples:\n"
@@ -191,10 +172,6 @@ UniValue generate(const JSONRPCRequest& request)
     uint64_t nMaxTries = 1000000;
     if (request.params.size() > 1) {
         nMaxTries = request.params[1].get_int();
-    }
-    int nMineAuxPow = 0;
-    if (request.params.size() > 2) {
-        nMineAuxPow = request.params[2].get_int();
     }
 
     boost::shared_ptr<CReserveScript> coinbaseScript;
@@ -208,21 +185,19 @@ UniValue generate(const JSONRPCRequest& request)
     if (coinbaseScript->reserveScript.empty())
         throw JSONRPCError(RPC_INTERNAL_ERROR, "No coinbase script available (mining requires a wallet)");
 
-    return generateBlocks(coinbaseScript, nGenerate, nMaxTries, true, nMineAuxPow);
+    return generateBlocks(coinbaseScript, nGenerate, nMaxTries, true);
 }
-
 
 UniValue generatetoaddress(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 2 || request.params.size() > 4)
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw runtime_error(
-            "generatetoaddress nblocks address (maxtries auxpow)\n"
+            "generatetoaddress nblocks address (maxtries)\n"
             "\nMine blocks immediately to a specified address (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
             "2. address      (string, required) The address to send the newly generated dogecoin to.\n"
             "3. maxtries     (numeric, optional) How many iterations to try (default = 1000000).\n"
-            "4. auxpow       (numeric, optional) If the block should include the auxpow header (default = 0).\n"
             "\nResult:\n"
             "[ blockhashes ]     (array) hashes of blocks generated\n"
             "\nExamples:\n"
@@ -235,10 +210,6 @@ UniValue generatetoaddress(const JSONRPCRequest& request)
     if (request.params.size() > 2) {
         nMaxTries = request.params[2].get_int();
     }
-    int nMineAuxPow = 0;
-    if (request.params.size() > 3) {
-        nMineAuxPow = request.params[3].get_int();
-    }
 
     CBitcoinAddress address(request.params[1].get_str());
     if (!address.IsValid())
@@ -247,7 +218,7 @@ UniValue generatetoaddress(const JSONRPCRequest& request)
     boost::shared_ptr<CReserveScript> coinbaseScript(new CReserveScript());
     coinbaseScript->reserveScript = GetScriptForDestination(address.Get());
 
-    return generateBlocks(coinbaseScript, nGenerate, nMaxTries, false, nMineAuxPow);
+    return generateBlocks(coinbaseScript, nGenerate, nMaxTries, false);
 }
 
 UniValue getmininginfo(const JSONRPCRequest& request)
@@ -1156,8 +1127,8 @@ static const CRPCCommand commands[] =
     { "mining",             "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
     { "mining",             "getauxblock",            &getauxblock,            true,  {"hash", "auxpow"} },
 
-    { "generating",         "generate",               &generate,               true,  {"nblocks","maxtries","auxpow"} },
-    { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"nblocks","address","maxtries","auxpow"} },
+    { "generating",         "generate",               &generate,               true,  {"nblocks","maxtries"} },
+    { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"nblocks","address","maxtries"} },
 
     { "util",               "estimatefee",            &estimatefee,            true,  {"nblocks"} },
     { "util",               "estimatepriority",       &estimatepriority,       true,  {"nblocks"} },
